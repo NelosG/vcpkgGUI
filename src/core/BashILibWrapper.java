@@ -21,7 +21,7 @@ public class BashILibWrapper extends LibWrapper {
     }
 
     @Override
-    public ArrayList<String> installedList() throws IOException, InterruptedException {
+    public ArrayList<String[]> installedList() throws IOException, InterruptedException {
         return null;
     }
 

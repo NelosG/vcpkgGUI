@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class PowershellLibWrapper extends LibWrapper {
@@ -40,14 +41,17 @@ public class PowershellLibWrapper extends LibWrapper {
     }
 
     @Override
-    public ArrayList<String> installedList() throws IOException, InterruptedException {
+    public ArrayList<String[]> installedList() throws IOException, InterruptedException {
         ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.command("powershell.exe", sanitize(file.getAbsolutePath()), "list");
-//        return Arrays.stream(execute(processBuilder).split("\n"))
-//                .collect(Collectors.toCollection(ArrayList<String>::new));
-
-        return Arrays.stream(execute(processBuilder).split("\n")).map(x -> x.split(" ")[0])
-                .collect(Collectors.toCollection(ArrayList<String>::new));
+        processBuilder.command("powershell.exe", sanitize(file.getAbsolutePath()), "list --x-full-desc");
+        return Arrays.stream(execute(processBuilder).split("\n"))
+                .map(x -> Arrays.stream(x.split("  ")).filter(st -> !st.isEmpty()).toArray(String[]::new))
+                .map(s -> {
+                    if(s.length == 2) {
+                        s = new String[]{s[0], "", s[1]};
+                    }
+                    return s;
+                }).collect(Collectors.toCollection(ArrayList<String[]>::new));
     }
 
     public String validateInstallation() {

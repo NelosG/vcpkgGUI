@@ -3,7 +3,7 @@
   <grid id="27dc6" binding="root" layout-manager="GridLayoutManager" row-count="4" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="20" width="544" height="400"/>
+      <xy x="20" y="20" width="482" height="400"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -15,54 +15,24 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="8f341" class="javax.swing.JList" binding="list" default-binding="true">
+          <component id="5d1fa" class="javax.swing.JTable" binding="table" custom-create="true" default-binding="true">
             <constraints/>
             <properties>
-              <autoscrolls value="true"/>
-              <doubleBuffered value="false"/>
-              <dragEnabled value="false"/>
-              <dropMode value="USE_SELECTION"/>
-              <enabled value="true"/>
-              <focusCycleRoot value="false"/>
-              <focusTraversalPolicyProvider value="false"/>
+              <autoCreateColumnsFromModel value="false"/>
+              <autoResizeMode value="1"/>
+              <fillsViewportHeight value="true"/>
               <inheritsPopupMenu value="false"/>
-              <layoutOrientation value="0"/>
-              <name value=""/>
-              <requestFocusEnabled value="true"/>
-              <selectionForeground color="-3670016"/>
-              <valueIsAdjusting value="false"/>
+              <intercellSpacing width="0" height="0"/>
+              <opaque value="true"/>
+              <showHorizontalLines value="false"/>
+              <showVerticalLines value="false"/>
             </properties>
             <clientProperties>
-              <List.isFileList class="java.lang.Boolean" value="false"/>
+              <Table.isFileList class="java.lang.Boolean" value="false"/>
             </clientProperties>
           </component>
         </children>
       </scrollpane>
-      <component id="217ce" class="javax.swing.JButton" binding="installPackageButton" default-binding="true">
-        <constraints>
-          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false">
-            <minimum-size width="130" height="30"/>
-            <preferred-size width="157" height="30"/>
-            <maximum-size width="130" height="30"/>
-          </grid>
-        </constraints>
-        <properties>
-          <horizontalAlignment value="0"/>
-          <horizontalTextPosition value="0"/>
-          <text value="Install package"/>
-        </properties>
-      </component>
-      <component id="419b9" class="javax.swing.JLabel">
-        <constraints>
-          <grid row="0" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
-            <preferred-size width="145" height="16"/>
-          </grid>
-        </constraints>
-        <properties>
-          <name value="Installed packages"/>
-          <text value="Installed packages"/>
-        </properties>
-      </component>
       <component id="22946" class="javax.swing.JLabel">
         <constraints>
           <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
@@ -73,24 +43,6 @@
           <text value="JetBrains Internships 2021."/>
         </properties>
       </component>
-      <component id="d15f7" class="javax.swing.JButton" binding="deletePackageButton" default-binding="true">
-        <constraints>
-          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false">
-            <minimum-size width="130" height="30"/>
-            <preferred-size width="160" height="30"/>
-            <maximum-size width="130" height="30"/>
-          </grid>
-        </constraints>
-        <properties>
-          <horizontalTextPosition value="0"/>
-          <text value="Delete package"/>
-        </properties>
-      </component>
-      <hspacer id="c4b2d">
-        <constraints>
-          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-      </hspacer>
       <component id="ddf33" class="javax.swing.JLabel" binding="version">
         <constraints>
           <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
@@ -104,11 +56,59 @@
       <component id="93fad" class="javax.swing.JLabel">
         <constraints>
           <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
-            <preferred-size width="160" height="16"/>
+            <preferred-size width="171" height="16"/>
           </grid>
         </constraints>
         <properties>
           <text value="Author: NelosG"/>
+        </properties>
+      </component>
+      <grid id="24727" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="217ce" class="javax.swing.JButton" binding="installPackageButton" default-binding="true">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false">
+                <minimum-size width="130" height="30"/>
+                <preferred-size width="157" height="30"/>
+                <maximum-size width="130" height="30"/>
+              </grid>
+            </constraints>
+            <properties>
+              <horizontalAlignment value="0"/>
+              <horizontalTextPosition value="0"/>
+              <text value="Install package"/>
+            </properties>
+          </component>
+          <component id="eef47" class="javax.swing.JButton" binding="updateButton" default-binding="true">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Update"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <hspacer id="769e3">
+        <constraints>
+          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+      </hspacer>
+      <component id="419b9" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="0" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <horizontalAlignment value="0"/>
+          <horizontalTextPosition value="0"/>
+          <name value="Installed packages"/>
+          <text value="Installed packages"/>
         </properties>
       </component>
     </children>
