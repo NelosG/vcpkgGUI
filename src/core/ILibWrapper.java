@@ -16,7 +16,9 @@ public interface ILibWrapper {
 
     String version() throws IOException, InterruptedException;
 
-    ArrayList<String[]> installedList() throws IOException, InterruptedException;
+    ArrayList<String[]> installedPackagesList() throws IOException, InterruptedException;
+
+    ArrayList<String[]> allPackagesList() throws IOException, InterruptedException;
 
     String validateInstallation();
 

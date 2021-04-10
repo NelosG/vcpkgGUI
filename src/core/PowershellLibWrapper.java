@@ -4,15 +4,15 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class PowershellLibWrapper extends LibWrapper {
     private final String default_con = System.getProperty("user.home") + "\\vcpkg\\vcpkg.exe";
 
     public PowershellLibWrapper() {
-        if (new File(default_con).exists()) {
-            file = new File(default_con);
+        File f = new File(default_con);
+        if (f.exists()) {
+            file = f;
         }
     }
 
@@ -41,11 +41,26 @@ public class PowershellLibWrapper extends LibWrapper {
     }
 
     @Override
-    public ArrayList<String[]> installedList() throws IOException, InterruptedException {
+    public ArrayList<String[]> installedPackagesList() throws IOException, InterruptedException {
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.command("powershell.exe", sanitize(file.getAbsolutePath()), "list --x-full-desc");
-        return Arrays.stream(execute(processBuilder).split("\n"))
-                .map(x -> Arrays.stream(x.split("  ")).filter(st -> !st.isEmpty()).toArray(String[]::new))
+        return parsePackages(execute(processBuilder));
+    }
+
+    @Override
+    public ArrayList<String[]> allPackagesList() throws IOException, InterruptedException {
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        processBuilder.command("powershell.exe", sanitize(file.getAbsolutePath()), "search");
+        ArrayList<String[]> list = parsePackages(execute(processBuilder));
+        return list;
+    }
+
+    private ArrayList<String[]> parsePackages(String str) {
+        return Arrays.stream(str.split("\n"))
+                .parallel()
+                .map(x -> Arrays.stream(x.split("  ")).parallel().filter(st -> !st.isEmpty() && !st.equals(System.lineSeparator()))
+                        .toArray(String[]::new))
+                .filter(s -> s.length > 1)
                 .map(s -> {
                     if(s.length == 2) {
                         s = new String[]{s[0], "", s[1]};

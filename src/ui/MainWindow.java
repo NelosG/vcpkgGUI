@@ -23,6 +23,7 @@ public class MainWindow extends JFrame {
     private JLabel version;
     private JTable table;
     private JButton updateButton;
+    private JTextField searchField;
 
     public MainWindow(LibWrapper libWrapper) {
         super("vcpkgGUI");
@@ -62,12 +63,13 @@ public class MainWindow extends JFrame {
 
     private void updateList() throws IOException, InterruptedException {
         tableContainer.clear();
-        tableContainer.addAll(libWrapper.installedList());
+        tableContainer.addAll(libWrapper.installedPackagesList());
     }
 
     private void createUIComponents() {
         tableContainer = new JTableContainer(this::deletionFunc);
         table = tableContainer.getTable();
+        searchField = tableContainer.getTextField();
     }
 
     private void deletionFunc(List<String> listForDelete) {
@@ -140,18 +142,19 @@ public class MainWindow extends JFrame {
 
     class installButtonEventListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
-            InstallWindow Inst = new InstallWindow(str -> {
+            InstallWindow Inst = new InstallWindow(libWrapper, str -> {
                 InstallationWindow IW = new InstallationWindow();
-                IW.setLocation(getX() + getWidth() / 2, getY() + getHeight() / 2);
+                IW.setLocation(getX() + 30, getY() + 30);
                 IW.installationStart();
                 AtomicBoolean err = new AtomicBoolean(false);
                 Thread thread = new Thread(() -> {
                     try {
-                        if (libWrapper.installLib(str) == null) {
-                            err.set(true);
-                        } else {
-                            updateList();
+                        for(String s : str) {
+                            if (libWrapper.installLib(s) == null) {
+                                err.set(true);
+                            }
                         }
+                            updateList();
                     } catch (IOException | InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -170,7 +173,8 @@ public class MainWindow extends JFrame {
                             JOptionPane.ERROR_MESSAGE);
                 }
             });
-            Inst.setLocation(getX() + getWidth() / 2, getY() + getHeight() / 2);
+            Inst.setLocation(getX() + 40, getY() + 40);
+            Inst.setSize(getWidth() - 80, getHeight() - 80);
             Inst.setVisible(true);
         }
     }
