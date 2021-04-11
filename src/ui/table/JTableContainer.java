@@ -1,9 +1,6 @@
 package ui.table;
 
-import sun.swing.DefaultLookup;
-
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -159,65 +156,17 @@ public class JTableContainer implements ActionListener {
                 return this;
             }
 
-            Color fg = null;
-            Color bg = null;
-
-            JTable.DropLocation dropLocation = table.getDropLocation();
-            if (dropLocation != null
-                    && !dropLocation.isInsertRow()
-                    && !dropLocation.isInsertColumn()
-                    && dropLocation.getRow() == row
-                    && dropLocation.getColumn() == column) {
-
-                fg = DefaultLookup.getColor(this, ui, "Table.dropCellForeground");
-                bg = DefaultLookup.getColor(this, ui, "Table.dropCellBackground");
-
-                isSelected = true;
-            }
-
             if (isSelected) {
-                super.setForeground(fg == null ? table.getSelectionForeground()
-                        : fg);
-                super.setBackground(bg == null ? table.getSelectionBackground()
-                        : bg);
+                super.setForeground(table.getSelectionForeground());
+                super.setBackground(table.getSelectionBackground());
             } else {
-                Color background = table.getBackground();
-                if (background == null || background instanceof javax.swing.plaf.UIResource) {
-                    Color alternateColor = DefaultLookup.getColor(this, ui, "Table.alternateRowColor");
-                    if (alternateColor != null && row % 2 != 0) {
-                        background = alternateColor;
-                    }
-                }
                 super.setForeground(table.getForeground());
-                super.setBackground(background);
+                super.setBackground(table.getBackground());
             }
 
             setFont(table.getFont());
 
-            if (hasFocus) {
-                Border border = null;
-                if (isSelected) {
-                    border = DefaultLookup.getBorder(this, ui, "Table.focusSelectedCellHighlightBorder");
-                }
-                if (border == null) {
-                    border = DefaultLookup.getBorder(this, ui, "Table.focusCellHighlightBorder");
-                }
-                setBorder(border);
-
-                if (!isSelected && table.isCellEditable(row, column)) {
-                    Color col;
-                    col = DefaultLookup.getColor(this, ui, "Table.focusCellForeground");
-                    if (col != null) {
-                        super.setForeground(col);
-                    }
-                    col = DefaultLookup.getColor(this, ui, "Table.focusCellBackground");
-                    if (col != null) {
-                        super.setBackground(col);
-                    }
-                }
-            } else {
-                setBorder(new EmptyBorder(1, 1, 1, 1));
-            }
+            setBorder(new EmptyBorder(1, 1, 1, 1));
 
             String data = value == null ? "" : value.toString();
             int lineWidth = this.getFontMetrics(this.getFont()).stringWidth(data);
