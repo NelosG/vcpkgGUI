@@ -1,7 +1,5 @@
 package core;
 
-import ui.install.InstallationWindow;
-
 import java.io.IOException;
 
 public abstract class UnixLibWrapper extends LibWrapper {

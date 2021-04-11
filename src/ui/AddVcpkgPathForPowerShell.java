@@ -9,7 +9,6 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 public class AddVcpkgPathForPowerShell extends JDialog {
     private JTextArea textArea;

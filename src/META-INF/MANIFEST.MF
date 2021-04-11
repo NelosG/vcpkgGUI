@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
 Implementation-Vendor: NelosG
-Main-Class: VCPKGGUI
+Main-Class: VcpkgGui
 

@@ -1,7 +1,6 @@
 package core;
 
 import ui.AddVcpkgPathForPowerShell;
-import ui.install.InstallationWindow;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
