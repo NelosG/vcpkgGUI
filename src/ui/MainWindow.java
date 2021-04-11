@@ -117,7 +117,7 @@ public class MainWindow extends JFrame {
                             if (JOptionPane.showConfirmDialog(null,
                                     "Removing a " + s + " will entail removing the following packages:\n" +
                                             createDeleteMessage(additionalList) +
-                                            ".\nDelete they?", "Deletion additional packages",
+                                            ".\nDelete them?", "Deletion additional packages",
                                     JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE)
 
                                     == JOptionPane.YES_OPTION) {
