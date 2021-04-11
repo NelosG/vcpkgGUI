@@ -13,10 +13,6 @@ public abstract class LibWrapper implements ILibWrapper {
     protected String shell;
 
     public LibWrapper() {
-//        File f = new File(default_con);
-//        if (f.exists()) {
-//            file = f;
-//        }
     }
 
     @Override

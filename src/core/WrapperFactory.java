@@ -3,6 +3,14 @@ package core;
 
 public class WrapperFactory {
     public static LibWrapper createWrapper() throws UnsupportedOperationException {
-        return OSValidator.validate() ? new PowershellLibWrapper() : new BashILibWrapper();
+        switch (OSValidator.validate()) {
+            case 0 -> {
+                return new PowershellLibWrapper();
+            }
+            case 1 -> {
+                return new BashILibWrapper();
+            }
+        }
+        return null;
     }
 }

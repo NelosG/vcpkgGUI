@@ -6,7 +6,6 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -14,8 +13,7 @@ public class PowershellLibWrapper extends LibWrapper {
     PowershellLibWrapper() {
         super();
         shell = "powershell.exe";
-//        runFile = Path.of(System.getProperty("user.home") + "/vcpkg/vcpkg.exe").toAbsolutePath().toString();
-        runFile = "abc";
+        runFile = Path.of(System.getProperty("user.home") + "/vcpkg/vcpkg.exe").toAbsolutePath().toString();
     }
 
     @Override

@@ -4,12 +4,14 @@ package core;
 public class OSValidator {
     private static final String OS = System.getProperty("os.name").toLowerCase();
 
-    public static Boolean validate() throws UnsupportedOperationException {
+    public static int validate() throws UnsupportedOperationException {
         if (isWindows()) {
-            return (true);
-        } else if (isMac() || isUnix()) {
-            return (false);
-        } else {
+            return 0;
+        } else if (isUnix()) {
+            return 1;
+        } if(isMac()){
+            return 2;
+        }else {
             throw new UnsupportedOperationException("Can't run on that System.");
         }
     }
