@@ -1,4 +1,4 @@
-package ui;
+package ui.install;
 
 import javax.swing.*;
 
@@ -17,7 +17,7 @@ public class InstallationWindow extends JDialog {
 
     //::TODO удалить кнопку закрытия окна
 
-    InstallationWindow(){
+    public InstallationWindow(){
         setContentPane(installationPanel);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setSize(200, 0);

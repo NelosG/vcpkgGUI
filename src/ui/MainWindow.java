@@ -1,6 +1,8 @@
 package ui;
 
 import core.LibWrapper;
+import ui.install.InstallWindow;
+import ui.install.InstallationWindow;
 import ui.table.JTableContainer;
 
 import javax.swing.*;
@@ -12,7 +14,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 public class MainWindow extends JFrame {
@@ -32,9 +33,21 @@ public class MainWindow extends JFrame {
         setBounds(0, 0, 1080, 800);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        root.addMouseListener(new MouseListener());
+        libWrapper.checkVcpkg();
+
+        root.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent event) {
+                table.clearSelection();
+            }});
         installPackageButton.addActionListener(new installButtonEventListener());
-        updateButton.addActionListener(new updateButtonEventListener());
+        updateButton.addActionListener(e -> {
+            try {
+                updateList();
+            } catch (IOException | InterruptedException ioException) {
+                ioException.printStackTrace();
+            }
+        });
         try {
             version.setText("Version of vcpkg: " + libWrapper.version());
             updateList();
@@ -67,11 +80,16 @@ public class MainWindow extends JFrame {
     }
 
     private void createUIComponents() {
-        tableContainer = new JTableContainer(this::deletionFunc);
+        tableContainer = new JTableContainer(this::deletionFunc, "Delete package(s)");
         table = tableContainer.getTable();
         searchField = tableContainer.getTextField();
     }
 
+
+
+    /*::TODO переписать эту функцию
+      ::TODO кастомное окно для ошибок и сообщений, вывод полного списка пакетов для удаления при нажатии на кнопку
+     */
     private void deletionFunc(List<String> listForDelete) {
         if (listForDelete.isEmpty()) {
             JOptionPane.showMessageDialog(null, """
@@ -115,44 +133,16 @@ public class MainWindow extends JFrame {
         }
     }
 
-    class updateButtonEventListener implements ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            try {
-                updateList();
-            } catch (IOException | InterruptedException ioException) {
-                ioException.printStackTrace();
-            }
-        }
-    }
-
-    public class MouseListener extends MouseAdapter {
-        @Override
-        public void mousePressed(MouseEvent event) {
-
-            table.clearSelection();
-        }
-    }
-
-
-    /*::TODO переписать эту функцию
-      ::TODO кастомное окно для ошибок и сообщений, вывод полного списка пакетов для удаления при нажатии на кнопку
-     */
-
     class installButtonEventListener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
             InstallWindow Inst = new InstallWindow(libWrapper, str -> {
                 InstallationWindow IW = new InstallationWindow();
-                IW.setLocation(getX() + 30, getY() + 30);
+                IW.setLocation(getX() + getWidth()/2, getY() + getHeight()/2);
                 IW.installationStart();
-                AtomicBoolean err = new AtomicBoolean(false);
                 Thread thread = new Thread(() -> {
                     try {
                         for(String s : str) {
-                            if (libWrapper.installLib(s) == null) {
-                                err.set(true);
-                            }
+                            libWrapper.installLib(s);
                         }
                             updateList();
                     } catch (IOException | InterruptedException e) {
@@ -168,10 +158,7 @@ public class MainWindow extends JFrame {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                if (err.get()) {
-                    JOptionPane.showMessageDialog(null, "This package doesn't exist.", "Dialog",
-                            JOptionPane.ERROR_MESSAGE);
-                }
+
             });
             Inst.setLocation(getX() + 40, getY() + 40);
             Inst.setSize(getWidth() - 80, getHeight() - 80);

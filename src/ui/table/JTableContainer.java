@@ -5,9 +5,9 @@ import sun.swing.DefaultLookup;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,12 +20,12 @@ import java.util.stream.Collectors;
 public class JTableContainer implements ActionListener {
     private final JTable table;
     private final DefaultTableModel tableModel;
-    private final JPopupMenu popupMenu;
     private final JMenuItem menuItemDelete;
-    private JTextField searchField;
-    private Consumer<List<String>> Action;
+    private final JTextField searchField;
+    private final Consumer<List<String>> Action;
+    private final TableRowSorter<TableModel> rowSorter;
 
-    public JTableContainer(Consumer<List<String>> action) {
+    public JTableContainer(Consumer<List<String>> action, String name) {
 
         this.Action = action;
 
@@ -34,15 +34,14 @@ public class JTableContainer implements ActionListener {
         tableModel = new MyTableModel(new String[0][0], columnNames);
         table = new JTable(tableModel);
         searchField = new JTextField();
-        popupMenu = new JPopupMenu();
-        menuItemDelete = new JMenuItem("Delete package(s)");
+        JPopupMenu popupMenu = new JPopupMenu();
+        menuItemDelete = new JMenuItem(name);
 
         menuItemDelete.addActionListener(this);
 
         popupMenu.add(menuItemDelete);
 
         table.setComponentPopupMenu(popupMenu);
-
 
 
         table.setShowGrid(true);
@@ -63,15 +62,90 @@ public class JTableContainer implements ActionListener {
         table.getColumnModel().getColumn(2).setCellRenderer(new CellRenderer());
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         table.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
 
         table.addMouseListener(new MouseListener(table));
         table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         table.setFocusable(false);
+        rowSorter = new TableRowSorter<>(table.getModel());
+        searchField.getDocument().addDocumentListener(new DocumentListener() {
+
+            private final StringBuilder sb = new StringBuilder();
+            private final String exclude = "\\(){}[]&|";
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                String text = searchField.getText();
+                Character c = text.charAt(text.length() - 1);
+                if (!exclude.contains(c.toString())) {
+                    sb.append(c);
+                    setFilter();
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                if (!exclude.contains(String.valueOf(sb.charAt(sb.length() - 1)))) {
+                    sb.deleteCharAt(sb.length() - 1);
+                    setFilter();
+                }
+            }
+
+            private void setFilter() {
+                if (sb.length() == 0) {
+                    rowSorter.setRowFilter(null);
+                } else {
+                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + sb, 0));
+                }
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                throw new UnsupportedOperationException("Not supported.");
+            }
+
+        });
+        table.setRowSorter(rowSorter);
     }
 
-    private class CellRenderer extends JTextPane implements TableCellRenderer{
+    @Override
+    public void actionPerformed(ActionEvent event) {
+        JMenuItem menu = (JMenuItem) event.getSource();
+        if (menu == menuItemDelete) {
+            runActionOnSelectedRow();
+        }
+    }
+
+    public void runActionOnSelectedRow() {
+        int[] selectedRow = table.getSelectedRows();
+        Action.accept(
+                Arrays.stream(selectedRow)
+                        .boxed()
+                        .map(i -> table.getValueAt(i, 0).toString())
+                        .collect(Collectors.toList())
+        );
+    }
+
+    public void addAll(ArrayList<String[]> installedList) {
+        installedList.forEach(tableModel::addRow);
+    }
+
+    public JTable getTable() {
+        return table;
+    }
+
+    public JTextField getTextField() {
+        return searchField;
+    }
+
+    public void clear() {
+        while (tableModel.getRowCount() > 0) {
+            tableModel.removeRow(0);
+        }
+    }
+
+    private static class CellRenderer extends JTextPane implements TableCellRenderer {
 
 
         private CellRenderer() {
@@ -152,41 +226,16 @@ public class JTableContainer implements ActionListener {
 
             int newRowHeight = ((lineWidth / rowWidth) * (lineHeight)) + lineHeight * 2;
             if (table.getRowHeight(row) != newRowHeight) {
-                if (lineWidth / rowWidth < 5){
+                if (lineWidth / rowWidth < 5) {
                     table.setRowHeight(row, newRowHeight);
                 }
             }
             this.setText(data);
             return this;
         }
-
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent event) {
-        JMenuItem menu = (JMenuItem) event.getSource();
-        if (menu == menuItemDelete) {
-            removeSelectedRow();
-        }
-    }
-
-    private void removeSelectedRow() {
-        int[] selectedRow = table.getSelectedRows();
-        Action.accept(
-                Arrays.stream(selectedRow)
-                .boxed()
-                .map(i -> table.getValueAt(i, 0).toString())
-                .collect(Collectors.toList())
-        );
-    }
-
-    public void addAll(ArrayList<String[]> installedList) {
-        installedList.forEach(tableModel::addRow);
     }
 
     private static class MyTableModel extends DefaultTableModel {
-
-
         public MyTableModel(String[][] strings, String[] columnNames) {
             super(strings, columnNames);
         }
@@ -194,21 +243,6 @@ public class JTableContainer implements ActionListener {
         @Override
         public boolean isCellEditable(int row, int column) {
             return false;
-        }
-
-    }
-    public JTable getTable() {
-        return table;
-    }
-
-    public JTextField getTextField() {
-        return searchField;
-    }
-
-
-    public void clear(){
-        while (tableModel.getRowCount() > 0) {
-            tableModel.removeRow(0);
         }
     }
 }
