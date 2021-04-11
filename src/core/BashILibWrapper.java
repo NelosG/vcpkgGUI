@@ -8,8 +8,6 @@ public class BashILibWrapper extends UnixLibWrapper {
 
     BashILibWrapper(){
         super();
-        shell = "vcpkg";
-        runFile = "";
     }
 
     @Override
@@ -22,7 +20,7 @@ public class BashILibWrapper extends UnixLibWrapper {
             processBuilder.command("sudo", "apt-get", "install", "build-essential",
                     "tar", "curl", "zip", "unzip").start();
 
-            getAndInstall();
+                install("sh");
             } catch (IOException e) {
                 System.err.println("Can't install vcpkg.");
                 System.exit(1);

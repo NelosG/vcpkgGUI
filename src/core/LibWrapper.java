@@ -1,5 +1,7 @@
 package core;
 
+import ui.install.InstallationWindow;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -92,6 +94,34 @@ public abstract class LibWrapper implements ILibWrapper {
                     }
                     return s;
                 }).collect(Collectors.toCollection(ArrayList<String[]>::new));
+    }
+
+    protected void install(String batORsh) {
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        try {
+            processBuilder.command(shell, "cd", System.getProperty("user.home")).start();
+            processBuilder.command(shell, "git", "clone", "https://github.com/microsoft/vcpkg");
+            processBuilder.command(shell, "cd", "vcpkg").start();
+            InstallationWindow IW = new InstallationWindow();
+            IW.setLocation(300, 300);
+            IW.installationStart();
+            Thread thread = new Thread(() -> {
+                processBuilder.command(shell, "./bootstrap-vcpkg." + batORsh);
+                processBuilder.command(shell, "vcpkg", "integrate", "install");
+                IW.installationEnd();
+            });
+
+            thread.start();
+            IW.setVisible(true);
+            try {
+                thread.join();
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+        } catch (IOException ioException) {
+            System.err.println("Can't install vcpkg.");
+            System.exit(1);
+        }
     }
 
     public abstract void checkVcpkg();

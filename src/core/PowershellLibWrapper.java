@@ -1,6 +1,7 @@
 package core;
 
 import ui.AddVcpkgPathForPowerShell;
+import ui.install.InstallationWindow;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -18,23 +19,23 @@ public class PowershellLibWrapper extends LibWrapper {
 
     @Override
     public void checkVcpkg() {
-        if(!new File(runFile).exists()) {
+        if (!new File(runFile).exists()) {
             Path path = Path.of("./configuration");
-            if(path.toFile().exists()) {
+            if (path.toFile().exists()) {
                 boolean err = false;
-                try (BufferedReader br = Files.newBufferedReader(path)){
+                try (BufferedReader br = Files.newBufferedReader(path)) {
                     runFile = br.readLine();
                 } catch (IOException e) {
                     err = true;
                 }
-                if(!err) {
+                if (!err) {
                     return;
                 }
             }
-            AddVcpkgPathForPowerShell pathWindow = new AddVcpkgPathForPowerShell();
+            AddVcpkgPathForPowerShell pathWindow = new AddVcpkgPathForPowerShell(this::install);
             pathWindow.setVisible(true);
             runFile = pathWindow.getSpecifiedPath();
-            try (BufferedWriter bw = Files.newBufferedWriter(path)){
+            try (BufferedWriter bw = Files.newBufferedWriter(path)) {
                 bw.write(runFile);
             } catch (IOException ignored) {
             }

@@ -10,6 +10,9 @@ public class WrapperFactory {
             case 1 -> {
                 return new BashILibWrapper();
             }
+            case 2 -> {
+                return new MacOsLibWrapper();
+            }
         }
         return null;
     }
