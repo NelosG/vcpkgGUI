@@ -8,7 +8,7 @@ public interface ILibWrapper {
 
     String sanitize(String installationName);
 
-    String installLib(String LibName) throws IOException, InterruptedException;
+    void installLib(String LibName) throws IOException, InterruptedException;
 
     String execute(ProcessBuilder processBuilder) throws IOException, InterruptedException;
 
@@ -19,7 +19,4 @@ public interface ILibWrapper {
     ArrayList<String[]> installedPackagesList() throws IOException, InterruptedException;
 
     ArrayList<String[]> allPackagesList() throws IOException, InterruptedException;
-
-    String validateInstallation();
-
 }

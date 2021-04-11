@@ -10,7 +10,7 @@ public class OSValidator {
         } else if (isMac() || isUnix()) {
             return (false);
         } else {
-            throw new UnsupportedOperationException("Can't run on that System!");
+            throw new UnsupportedOperationException("Can't run on that System.");
         }
     }
 

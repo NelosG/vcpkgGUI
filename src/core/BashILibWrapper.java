@@ -1,32 +1,15 @@
 package core;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
 public class BashILibWrapper extends LibWrapper {
 
-
-    public String installLib(String LibName) {
-        return null;
+    BashILibWrapper(){
+        super();
+        shell = "vcpkg";
+        runFile = "";
     }
 
+    //::TODO add installation for bash if vcpkg doesn't exist.
     @Override
-    public String removeLib(String LibName, boolean recursive) {
-        return null;
+    public void checkVcpkg() {
     }
-
-    @Override
-    public String version() throws IOException, InterruptedException {
-        return null;
-    }
-
-    @Override
-    public ArrayList<String[]> installedList() throws IOException, InterruptedException {
-        return null;
-    }
-
-    public String validateInstallation() {
-        return null;
-    }
-
 }
