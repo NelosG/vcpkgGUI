@@ -8,6 +8,7 @@ import java.awt.dnd.DropTargetDropEvent;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class AddVcpkgPathForPowerShell extends JDialog {
@@ -17,9 +18,9 @@ public class AddVcpkgPathForPowerShell extends JDialog {
     private JButton installButton;
     private boolean pathAdded = false;
     private String specifiedPath;
-    private final Consumer<String> consumer;
+    private final BiConsumer<String, String> consumer;
 
-    public AddVcpkgPathForPowerShell(Consumer<String> cons) {
+    public AddVcpkgPathForPowerShell(BiConsumer<String, String> cons) {
         consumer = cons;
         setContentPane(root);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -53,7 +54,7 @@ public class AddVcpkgPathForPowerShell extends JDialog {
             }
         });
         installButton.addActionListener(e -> {
-            consumer.accept("bat");
+            consumer.accept("bat", System.getProperty("user.home"));
             specifiedPath = Path.of(System.getProperty("user.home") + "/vcpkg/vcpkg.exe").toAbsolutePath().toString();
             pathAdded = true;
             dispose();

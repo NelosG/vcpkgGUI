@@ -96,10 +96,10 @@ public abstract class LibWrapper implements ILibWrapper {
                 }).collect(Collectors.toCollection(ArrayList<String[]>::new));
     }
 
-    protected void install(String batORsh) {
+    protected void install(String batORsh, String path) {
         ProcessBuilder processBuilder = new ProcessBuilder();
         try {
-            processBuilder.command(shell, "cd", System.getProperty("user.home")).start();
+            processBuilder.command(shell, "cd", path).start();
             processBuilder.command(shell, "git", "clone", "https://github.com/microsoft/vcpkg");
             processBuilder.command(shell, "cd", "vcpkg").start();
             InstallationWindow IW = new InstallationWindow();

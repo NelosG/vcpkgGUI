@@ -20,7 +20,7 @@ public class BashILibWrapper extends UnixLibWrapper {
             processBuilder.command("sudo", "apt-get", "install", "build-essential",
                     "tar", "curl", "zip", "unzip").start();
 
-                install("sh");
+                install("sh", System.getProperty("user.home"));
             } catch (IOException e) {
                 System.err.println("Can't install vcpkg.");
                 System.exit(1);

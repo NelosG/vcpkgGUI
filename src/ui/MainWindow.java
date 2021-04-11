@@ -92,9 +92,7 @@ public class MainWindow extends JFrame {
      */
     private void deletionFunc(List<String> listForDelete) {
         if (listForDelete.isEmpty()) {
-            JOptionPane.showMessageDialog(null, """
-                            No package selected to remove.
-                            Please select one or more packages.""", "Error",
+            JOptionPane.showMessageDialog(null, "No package selected to remove. \nPlease select one or more packages.", "Error",
                     JOptionPane.ERROR_MESSAGE);
         } else {
             if (JOptionPane.showConfirmDialog(null,
