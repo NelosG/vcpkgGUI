@@ -68,25 +68,17 @@ public class JTableContainer implements ActionListener {
         rowSorter = new TableRowSorter<>(table.getModel());
         searchField.getDocument().addDocumentListener(new DocumentListener() {
 
-            private final StringBuilder sb = new StringBuilder();
-            private final String exclude = "\\(){}[]&|";
-
+            private String sb;
             @Override
             public void insertUpdate(DocumentEvent e) {
-                String text = searchField.getText();
-                Character c = text.charAt(text.length() - 1);
-                if (!exclude.contains(c.toString())) {
-                    sb.append(c);
-                    setFilter();
-                }
+                sb = searchField.getText().trim();
+                setFilter();
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                if (!exclude.contains(String.valueOf(sb.charAt(sb.length() - 1)))) {
-                    sb.deleteCharAt(sb.length() - 1);
-                    setFilter();
-                }
+                sb = searchField.getText().trim();
+                setFilter();
             }
 
             private void setFilter() {
